@@ -26,7 +26,7 @@ export default function apply(ctx: Context) {
         .option('search', '-s [word:text]')
         .option('timeout', '-t <time:number>', { fallback: 180 })
         .shortcut('随机单词', { options: { random: true }})
-        .shortcut(/^查单词([a-zA-Z ]*)$/g, { options: { search: '$1'.trim() } })
+        .shortcut(/^查单词([a-zA-Z-,.!?' ]+)$/g, { options: { search: '$1'.trim() } })
         .action(async ({ session, options }) => {
             try {
                 if (options.random) {
@@ -83,7 +83,7 @@ export default function apply(ctx: Context) {
                                 return trans.join('\n')
                             })(),
                             `来源: ${word.dictionary}`,
-                            `标签: ${word?.tag.join('、') || '网络'}`,
+                            `标签: ${word.tag?.join('、') || '网络'}`,
                             segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })
                         ].join('\n')
                     }
