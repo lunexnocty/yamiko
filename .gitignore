@@ -3,6 +3,7 @@ yarn.lock
 *.log
 *.yml
 *.json
+package.json
 
 logs/
 .git/

@@ -83,13 +83,13 @@ export default function apply(ctx: Context) {
                                 return trans.join('\n')
                             })(),
                             `来源: ${word.dictionary}`,
-                            `标签: ${word.tag.join('、')}`,
+                            `标签: ${word?.tag.join('、') || '网络'}`,
                             segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })
                         ].join('\n')
                     }
                 }
-            } catch {
-                return '网络请求失败，等待维护'
+            } catch (e) {
+                return e.toString()
             }
         })
 }
