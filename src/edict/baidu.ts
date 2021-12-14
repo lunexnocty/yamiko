@@ -184,7 +184,7 @@ function parse_collins(data: any): WordMean[] {
 
     for (const mean of data.entry) {
         if (mean.type === 'mean') {
-            const v = mean.v[0] as V
+            const v = mean.value[0] as V
             means.push({
                 part: v.posp[0].label,
                 cn: v.tran,
