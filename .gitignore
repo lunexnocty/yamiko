@@ -1,0 +1,9 @@
+*.log
+*.yml
+LICENSE
+yarn.lock
+
+logs/
+.git/
+onebot/
+node_modules/
