@@ -1,6 +1,7 @@
 import { Context, Random, segment } from "koishi";
 import axios from 'axios';
 
+import { lookup } from "./baidu";
 type Vocabulary = {
     total: number,
     list: string[]
@@ -65,18 +66,30 @@ export default function apply(ctx: Context) {
                         }
                     }
                 } else if (options.search) {
-                    const resp = await axios.get<Word>(`https://cdn.jsdelivr.net/gh/lyc8503/baicizhan-word-meaning-API/data/words/${options.search}.json`)
-                    return [
-                        `【${resp.data.word}】(${resp.data.accent})`,
-                        `释义：${resp.data.mean_cn}`,
-                        `英文释义：${resp.data.mean_en}`,
-                        `例句：${resp.data.sentence}`,
-                        `翻译：${resp.data.sentence_trans}`,
-                        segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })
-                    ].join('\n')
+                    const word = await lookup(options.search)
+                    
+                    if (typeof word === 'string') {
+                        return `${word}\n${segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })}`
+                    } else {
+                        return [
+                            `【${word.src}】(${word.pronunciation})`,
+                            (_ => {
+                                const trans:string[] = []
+                                word.means.forEach(mean => {
+                                    trans.push(mean.part)
+                                    mean.cn && trans.push('  ' + mean.cn)
+                                    mean.en && trans.push('  ' + mean.en)
+                                })
+                                return trans.join('\n')
+                            })(),
+                            `来源: ${word.dictionary}`,
+                            `标签: ${word.tag.join('、')}`,
+                            segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })
+                        ].join('\n')
+                    }
                 }
             } catch {
-                return '网络请求失败，等待修复'
+                return '网络请求失败，等待维护'
             }
         })
 }
