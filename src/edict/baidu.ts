@@ -188,7 +188,7 @@ function parse_collins(data: any): WordMean[] {
             means.push({
                 part: v.posp[0].label,
                 cn: v.tran,
-                en: v.def.replace(/<[/]b>/g, '')
+                en: v.def.replace(/<[/]?b>/g, '')
             })
         }
     }
