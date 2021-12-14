@@ -1,9 +1,11 @@
-*.log
-*.yml
 LICENSE
 yarn.lock
+*.log
+*.yml
+*.json
 
 logs/
 .git/
 onebot/
 node_modules/
+tests/

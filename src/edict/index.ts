@@ -2,6 +2,8 @@ import { Context, Random, segment } from "koishi";
 import axios from 'axios';
 
 import { lookup } from "./baidu";
+
+
 type Vocabulary = {
     total: number,
     list: string[]
@@ -67,7 +69,6 @@ export default function apply(ctx: Context) {
                     }
                 } else if (options.search) {
                     const word = await lookup(options.search)
-                    
                     if (typeof word === 'string') {
                         return `${word}\n${segment('image', { url: `http://a60.one:404/?bytes=true&__timestamp__=${Date.now()}`, cache: false })}`
                     } else {
@@ -76,9 +77,8 @@ export default function apply(ctx: Context) {
                             (_ => {
                                 const trans:string[] = []
                                 word.means.forEach(mean => {
-                                    trans.push(mean.part)
-                                    mean.cn && trans.push('  ' + mean.cn)
-                                    mean.en && trans.push('  ' + mean.en)
+                                    trans.push(mean.part + '  ' + (mean.cn || ''))
+                                    mean.en && trans.push('    ' + mean.en)
                                 })
                                 return trans.join('\n')
                             })(),

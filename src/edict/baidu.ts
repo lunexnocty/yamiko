@@ -11,7 +11,7 @@ type Word = {
     pronunciation: string
     means: WordMean[]
     dictionary: string
-    tag: string[]
+    tag?: string[]
 }
 
 type TransResult = Word | string
@@ -20,8 +20,8 @@ export async function lookup(word: string): Promise<TransResult> {
     try {
         const resp = await axios.post(config.url, data(word), { headers: { Cookie: config.cookie } })
         return parse_result(resp.data)
-    } catch {
-        return '网络错误'
+    } catch (e) {
+        return e.toString()
     }
 }
 
@@ -65,6 +65,7 @@ function data(word: string): Record<string, string> {
             simple_means_flag: '3',
             sign: sign(word),
             token: config.token,
+            domain: 'commom'
         }
     }
 
@@ -121,7 +122,7 @@ function parse_dict_result(data: any): Word {
         pronunciation: data.simple_means.symbols[0].ph_am,
         means: means,
         dictionary: dictionary,
-        tag: data.simple_means.tags.core
+        tag: data.simple_means.tags?.core
     }
 }
 
@@ -130,7 +131,7 @@ function parse_simple_means(data: any): WordMean[] {
     for (const part of data.symbols[0].parts) {
         for (const mean of part.means as string[]) {
             means.push({
-                part: part.part,
+                part: part?.part,
                 cn: mean
             })
         }
