@@ -142,7 +142,6 @@ class Nat {
             session.sendQueued('No Data')
         }
     }
-    
 }
 
 const states: Map<string, Nat> = new Map()
